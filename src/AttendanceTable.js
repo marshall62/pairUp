@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import StudentImage from './StudentImage';
 
 
 function AttendanceRadio(props) {
@@ -8,27 +9,7 @@ function AttendanceRadio(props) {
     checked={props.checked} />
 }
 
-class StudentImage extends Component {
 
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-  }
-
-  // using arrow function so I can refer to this
-  handleClick = () => {
-    let imgelt = this.myRef.current;
-    imgelt.width = imgelt.width === 30 ? 300 : 30;
-    imgelt.height = imgelt.height === 30 ? 300 : 30;
-
-  }
-
-  render () {
-    return <img ref={this.myRef} className="studentpic" 
-    onClick={this.handleClick} src={this.props.pic_url} 
-    width="30" height="30"/>
-  }
-}
 
 class StudentAttendanceRow extends Component {
 
@@ -42,7 +23,7 @@ class StudentAttendanceRow extends Component {
     const indexLabel = studIndex + 1;
     return <tr >
       <td>{indexLabel}</td>
-      <td><StudentImage index={studIndex} pic_url={this.props.pic_url}/></td>
+      <td><StudentImage pic_url={this.props.pic_url}/></td>
       <td>{name}</td>
       <td><AttendanceRadio name={radName} status='P' studIndex={studIndex} onChangeStatus={this.props.onChangeStatus} checked={present} /></td>
       <td><AttendanceRadio name={radName} status='A' studIndex={studIndex} onChangeStatus={this.props.onChangeStatus} checked={absent} /></td>
@@ -56,6 +37,7 @@ class AttendanceTable extends Component {
 
 
   render() {
+    console.log("Attendance table studs",this.props.students);
     const rows = this.props.students.map((s, index) => {
       return <StudentAttendanceRow key={index} studIndex={index} first_name={s.preferred_fname} last_name={s.last_name}
         status={s.status} pic_url={s.pic_url} onChangeStatus={this.props.onChangeStatus} />
@@ -80,4 +62,4 @@ class AttendanceTable extends Component {
   }
 }
 
-export default AttendanceTable
+export default AttendanceTable 

@@ -1,0 +1,7 @@
+From time to time react or node seem to get hosed and the react app won't start because 
+of some error.  I fix it typically by reinstalling npm and the dependencies
+with
+
+npm install -g npm@latest to update npm because it is sometimes buggy.
+rm -rf node_modules to remove the existing modules.
+npm install to re-install the project dependencies.
