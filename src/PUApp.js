@@ -24,7 +24,6 @@ Date.prototype.mdy = function() {
           (dd>9 ? '' : '0') + dd,
           this.getFullYear()
          ].join('/');
-  console.log("date mdy",v);
   return v;
 };
 
@@ -33,6 +32,7 @@ class PUApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tabkey: 'attendance',
       students: [],
       groups: [],
       sections: [],
@@ -54,8 +54,8 @@ class PUApp extends Component {
     return fetch(url)
       .then(result => result.json())
       .then(result => {
-        console.log("fetch returns", result);
         const sec = result[0];
+        console.log("New roster",sec.roster.students)
         this.setState({
           students: sec.roster.students,
           secId: sec.id,
@@ -73,7 +73,6 @@ class PUApp extends Component {
     return fetch(url)
         .then(result => result.json())
         .then(result => {
-          console.log("fetch returns", result);
           this.setState({
             sections: result
           })
@@ -89,20 +88,10 @@ class PUApp extends Component {
     return fetch(url)
       .then(result => result.json())
       .then(groups => {
-        console.log("fetch returns", groups);
         this.setState({groups: groups})
       });  
   }
 
-  // uneeded.  For when I was worried about mutating state
-  setGroups (groups) {
-    console.log("setting state with groups",groups);
-    let stcpy = {...this.state}
-    console.log("state copy",stcpy);
-    stcpy.groups = groups;
-    console.log("state copy with groups",stcpy);
-    this.setState(stcpy);
-  }
 
   // Code is invoked after the component is mounted/inserted into the DOM tree.
   componentDidMount() {
@@ -117,18 +106,18 @@ class PUApp extends Component {
 
     const url = 'http://localhost:5000/rosters';
     const selectedDate = this.state.date;
-    const old_date = '04/12/2005';
+    // const old_date = '04/12/2005';
     fetch(url, {
       method: 'post',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ secId: secId, date: old_date, students: students })
+      body: JSON.stringify({ secId: secId, date: selectedDate.mdy(), students: students })
     }).then(function (response) {
       return response.json();
     }).then(function (data) {
-      console.log('received:', data);
+      // console.log('received:', data);
     });
   }
 
@@ -136,12 +125,11 @@ class PUApp extends Component {
 
   // arrow fn method allows access to the class's this.
   handleChangeDate = date => {
-    console.log("date set to" + date);
     this.setState({
       date: new Date(date)
     });
-    this.getSectionRoster(this.state.secId, this.state.date)
-      .then(result => this.getGroups(this.state.secId, this.state.date))
+    this.getSectionRoster(this.state.secId, date)
+      .then(result => this.getGroups(this.state.secId, date))
     
   };
 
@@ -156,21 +144,22 @@ class PUApp extends Component {
   }
 
   handleSave = (e) => {
-    alert("Saving");
     this.save_attendance(this.state.secId, this.state.students);
   }
 
   handleSectionChanged = (index) => {
     const ix = index.index;
     const sec = this.state.sections[ix];
-    this.getSectionRoster(sec.number, this.state.date);
+    this.setState({secId: sec.id});
+    this.getSectionRoster(sec.id, this.state.date)
+      .then(result => this.getGroups(sec.id, this.state.date))
+    
   }
 
   handleGenerateGroups = () => {
     const selectedDate = this.state.date.mdy();
     const secId = this.state.secId;
     const url = 'http://localhost:5000/groups';
-    console.log("in generate groups");
     fetch(url, {
       method: 'post',
       mode: 'cors',
@@ -181,18 +170,18 @@ class PUApp extends Component {
     }).then(response => 
        response.json()
      ).then(data => {
-       var groups = { ...this.state.groups};
-       groups = data;
-       this.setState({groups});
-        console.log("state",this.state);
-
-        // this.setState({groups: [{members: [{preferred_fname:'a', last_name:'A'}]}]});
-        console.log(" change to state",this.state);
+       this.setState({groups: data, tabKey: 'groups'});
     });
   }
 
+  handleTabSelect = (key) => {
+    this.setState({tabKey: key})
+  }
+
   handleGroupsCSV = () => {
-    console.log("Groups CSV");
+    var url = 'http://localhost:5000/groups?secId='+
+      this.state.secId+'&format=csv&date='+this.state.date.mdy();
+    window.location.href = url;
   }
 
 
@@ -200,7 +189,9 @@ class PUApp extends Component {
     return (
       <div className="container">
         <PairUpBanner></PairUpBanner>
-        <Tabs>
+        <Tabs activeKey={this.state.tabKey} 
+          defaultActiveKey="attendance"
+          onSelect={this.handleTabSelect}>
           <Tab eventKey="attendance" title="Attendance">
             <form>
               <div className="form-row">

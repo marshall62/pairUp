@@ -37,7 +37,6 @@ class AttendanceTable extends Component {
 
 
   render() {
-    console.log("Attendance table studs",this.props.students);
     const rows = this.props.students.map((s, index) => {
       return <StudentAttendanceRow key={index} studIndex={index} first_name={s.preferred_fname} last_name={s.last_name}
         status={s.status} pic_url={s.pic_url} onChangeStatus={this.props.onChangeStatus} />
