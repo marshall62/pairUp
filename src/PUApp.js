@@ -143,8 +143,21 @@ class PUApp extends Component {
     this.setState({ students: students });
   }
 
+  // getting away with mutating state because I'm not relying on it to force
+  // a DOM change.  It will be sent to server API which is all that's necessary.
+  handleChangeStudentName = (index, name) => {
+    console.log("change student name",index, name);
+    let students = this.state.students;
+    let stud = students[index];
+    stud.edited = true; // add an edited field to the student to indicate it was chgd
+    let names = name.split(' ');
+    stud.preferred_fname = names[0];
+    stud.last_name = names[1];
+  }
+
   handleSave = (e) => {
-    this.save_attendance(this.state.secId, this.state.students);
+    if (window.confirm("Are you sure you want to save?"))
+      this.save_attendance(this.state.secId, this.state.students);
   }
 
   handleSectionChanged = (index) => {
@@ -157,21 +170,23 @@ class PUApp extends Component {
   }
 
   handleGenerateGroups = () => {
-    const selectedDate = this.state.date.mdy();
-    const secId = this.state.secId;
-    const url = 'http://localhost:5000/groups';
-    fetch(url, {
-      method: 'post',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ secId: secId, date: selectedDate})
-    }).then(response => 
-       response.json()
-     ).then(data => {
-       this.setState({groups: data, tabKey: 'groups'});
-    });
+    if (window.confirm("Are you sure you want to generate new groups")) {
+      const selectedDate = this.state.date.mdy();
+      const secId = this.state.secId;
+      const url = 'http://localhost:5000/groups';
+      fetch(url, {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ secId: secId, date: selectedDate})
+      }).then(response => 
+        response.json()
+      ).then(data => {
+        this.setState({groups: data, tabKey: 'groups'});
+      });
+    }
   }
 
   handleTabSelect = (key) => {
@@ -208,6 +223,7 @@ class PUApp extends Component {
               </div>
               <AttendanceTable 
                 onChangeStatus={this.handleChangeStudentStatus} 
+                onChangeStudentName={this.handleChangeStudentName}
                 students={this.state.students} />
               
             </form>
