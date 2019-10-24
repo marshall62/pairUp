@@ -31,7 +31,7 @@ class StudentNameField extends Component {
     const name = "name" + this.props.index;
     return <Form.Control plaintext readOnly={this.state.readonly} 
       name={name}
-      defaultValue={this.props.name} onDoubleClick={this.handleNameDblClick}
+      value={this.props.name} onDoubleClick={this.handleNameDblClick}
       onChange={this.handleNameChange} />
     // return <input type='text' readOnly={this.state.readonly} 
     //           name={name} defaultValue={this.props.name}
@@ -54,7 +54,8 @@ class StudentAttendanceRow extends Component {
     return <tr >
       <td>{indexLabel}</td>
       <td><StudentImage pic_url={this.props.pic_url}/></td>
-      <td><StudentNameField name={name} index={studIndex} onChangeStudentName={this.props.onChangeStudentName}/> 
+      <td><StudentNameField name={name} index={studIndex} 
+        onChangeStudentName={this.props.onChangeStudentName}/> 
       </td>
       <td><AttendanceRadio name={radName} status='P' studIndex={studIndex} onChangeStatus={this.props.onChangeStatus} checked={present} /></td>
       <td><AttendanceRadio name={radName} status='A' studIndex={studIndex} onChangeStatus={this.props.onChangeStatus} checked={absent} /></td>
@@ -69,7 +70,8 @@ class AttendanceTable extends Component {
 
   render() {
     const rows = this.props.students.map((s, index) => {
-      return <StudentAttendanceRow key={index} studIndex={index} first_name={s.preferred_fname} last_name={s.last_name}
+      return <StudentAttendanceRow key={index} studIndex={index} 
+        first_name={s.preferred_fname} last_name={s.last_name}
         status={s.status} pic_url={s.pic_url} onChangeStatus={this.props.onChangeStatus}
         onChangeStudentName={this.props.onChangeStudentName} />
     });

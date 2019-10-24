@@ -61,6 +61,7 @@ class PUApp extends Component {
           secId: sec.id,
           title: sec.title
         });
+        console.log('state',this.state);
         return sec.id;
       });
         
@@ -143,21 +144,30 @@ class PUApp extends Component {
     this.setState({ students: students });
   }
 
-  // getting away with mutating state because I'm not relying on it to force
-  // a DOM change.  It will be sent to server API which is all that's necessary.
+  // An edit occurred on a student name in the attendance table.  
+  // Need to update the state's student list with a new student object.  Does
+  // this without mutating.
   handleChangeStudentName = (index, name) => {
     console.log("change student name",index, name);
-    let students = this.state.students;
-    let stud = students[index];
-    stud.edited = true; // add an edited field to the student to indicate it was chgd
     let names = name.split(' ');
-    stud.preferred_fname = names[0];
-    stud.last_name = names[1];
+    let fname = names[0];
+    let lname = names[1];
+    let students = this.state.students;
+    let students2 = students.slice(); // shallow copy of students
+    let chgstud = {...students2[index], edited: true, 
+      preferred_fname: fname, last_name: lname};
+    students2[index] = chgstud;
+    const newst = {...this.state};
+    newst.students = students2;
+    this.setState(newst)
   }
 
   handleSave = (e) => {
     if (window.confirm("Are you sure you want to save?"))
+    {
+      console.log(this.state.students);
       this.save_attendance(this.state.secId, this.state.students);
+    }
   }
 
   handleSectionChanged = (index) => {
@@ -169,7 +179,7 @@ class PUApp extends Component {
     
   }
 
-  handleGenerateGroups = () => {
+  handleGenerateGroups = (basedOnAttendance) => {
     if (window.confirm("Are you sure you want to generate new groups")) {
       const selectedDate = this.state.date.mdy();
       const secId = this.state.secId;
@@ -180,7 +190,7 @@ class PUApp extends Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ secId: secId, date: selectedDate})
+        body: JSON.stringify({ secId: secId, date: selectedDate, basedOnAttendance:basedOnAttendance})
       }).then(response => 
         response.json()
       ).then(data => {
@@ -238,12 +248,13 @@ class PUApp extends Component {
           <div className="col-2">
             <button className="btn btn-primary" onClick={this.handleSave}>Save</button>
           </div>
-          <div className="col-3">
-            <button className="btn btn-primary" onClick={this.handleGenerateGroups}>Generate Groups</button>
-          </div>
-          <div className="col-2">
-            <button className="btn btn-primary" onClick={this.handleGroupsCSV}>Groups CSV</button>
-          </div>
+          <div className="col-4">
+                  <DropdownButton id="dropdown-basic-button" title="Group Generation">
+                    <Dropdown.Item onSelect={() => this.handleGenerateGroups(true)}>Based on Attendance</Dropdown.Item>
+                    <Dropdown.Item onSelect={() => this.handleGenerateGroups(false)}>Prior to Attendance</Dropdown.Item>
+                    <Dropdown.Item onSelect={this.handleGroupsCSV}>CSV File</Dropdown.Item>   
+                  </DropdownButton>
+                </div>
         </div>
       </div>
     );
