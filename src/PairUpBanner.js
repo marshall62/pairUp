@@ -21,8 +21,8 @@ function PairUpBanner (props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href="#admin">Admin</Nav.Link>
-                    <Nav.Link href="#attendance">Attendance</Nav.Link>
+                    <Nav.Link onClick={() => props.onToolSelect('admin')} href="#admin">Admin</Nav.Link>
+                    <Nav.Link onClick={() => props.onToolSelect('attendance')} href="#attendance">Attendance</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
