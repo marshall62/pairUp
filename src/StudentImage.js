@@ -16,7 +16,7 @@ class StudentImage extends Component {
     }
   
     render () {
-      return <img ref={this.myRef} className="studentpic" 
+      return <img ref={this.myRef} className="studentpic" alt="student pic"
         onClick={this.handleClick} src={this.props.pic_url} 
         width="30" height="30"/>
     }

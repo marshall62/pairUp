@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import logo from './logo.svg';
 import './App.css';
 
 import PairUpBanner from './PairUpBanner';
@@ -19,7 +18,7 @@ class PUApp extends Component {
 
   handleToolSelect = (e) => {
     console.log("selected", e);
-    this.setState({admin: (e == 'admin')})
+    this.setState({admin: (e === 'admin')})
   }
 
   render() {

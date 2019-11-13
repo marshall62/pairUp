@@ -29,28 +29,4 @@ function PairUpBanner (props) {
     )
 }
 
-function PairUpBanner1 (props) {
-    return(
-        <div>
-            <div style={{height: '4px'}}></div>
-            <div className="row">
-                <div className="col-sm-2">&nbsp;</div>
-                <div className="col-sm-1">
-                    <img align="bottom"
-                        src={pearIcon}
-                        width="70" height="70" />
-                </div>
-                <div align="left" className="col-sm-6">
-                    <h2 className="pair-header">PairUp</h2>
-                </div>
-                <div className="row">
-                    <div className="col-sm-2"><a className='pair-tab-text' href="{{ url_for('roster_admin') }}">Admin</a></div>
-                    <div className="col-sm-2"><a className='pair-tab-text' href="{{ url_for('rosters_page') }}">Attendance</a></div>
-                    <div className="col-sm-2"><a className='pair-tab-text' href="{{ url_for('login') }}">Login</a></div>
-                </div>
-            </div>
-        </div> 
-    );     
-}
-
 export default PairUpBanner

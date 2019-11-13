@@ -1,32 +1,29 @@
 import React, { Component } from 'react'
-import logo from './logo.svg';
 import './App.css';
 import ModelFetcher from './ModelFetcher';
 import AttendanceTable from './AttendanceTable';
 import GroupsTable from './GroupsTable';
-
-import PairUpBanner from './PairUpBanner';
 
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import DatePicker from "react-datepicker";
- 
+import {dateToMdy} from './dates.js'; 
 import "react-datepicker/dist/react-datepicker.css";
 
 
-Date.prototype.mdy = function() {
-  var mm = this.getMonth() + 1; // getMonth() is zero-based
-  var dd = this.getDate();
+// Date.prototype.mdy = function() {
+//   var mm = this.getMonth() + 1; // getMonth() is zero-based
+//   var dd = this.getDate();
 
-  var v = [
-          (mm>9 ? '' : '0') + mm,
-          (dd>9 ? '' : '0') + dd,
-          this.getFullYear()
-         ].join('/');
-  return v;
-};
+//   var v = [
+//           (mm>9 ? '' : '0') + mm,
+//           (dd>9 ? '' : '0') + dd,
+//           this.getFullYear()
+//          ].join('/');
+//   return v;
+// };
 
 class PUAttendance extends Component {
 
@@ -51,7 +48,7 @@ class PUAttendance extends Component {
   getSectionRoster (secId, dt) {
     let url = 'http://localhost:5000/sections' +
      (secId ? "?id="+secId: "") +
-     (dt ? "&date="+dt.mdy() : "");
+     (dt ? "&date="+dateToMdy(dt) : "");
     return fetch(url)
       .then(result => result.json())
       .then(result => {
@@ -89,7 +86,7 @@ class PUAttendance extends Component {
   getGroups (secId, dt) {
     let url = 'http://localhost:5000/groups' + 
       (secId ? "?secId="+secId : "") +
-      (dt ? "&date="+dt.mdy() : "")
+      (dt ? "&date="+dateToMdy(dt) : "")
     return fetch(url)
       .then(result => result.json())
       .then(groups => {
@@ -105,6 +102,7 @@ class PUAttendance extends Component {
         this.setState({
             sections: result
           })
+        console.log("Component mounting");
         return this.getSectionRoster()})
       .then(result => 
         this.getGroups(this.state.secId, new Date()));
@@ -121,7 +119,7 @@ class PUAttendance extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ secId: secId, date: selectedDate.mdy(), students: students })
+      body: JSON.stringify({ secId: secId, date: dateToMdy(selectedDate), students: students })
     }).then(function (response) {
       return response.json();
     }).then(function (data) {
@@ -188,7 +186,7 @@ class PUAttendance extends Component {
 
   handleGenerateGroups = (basedOnAttendance) => {
     if (window.confirm("Are you sure you want to generate new groups")) {
-      const selectedDate = this.state.date.mdy();
+      const selectedDate = dateToMdy(this.state.date);
       const secId = this.state.secId;
       const url = 'http://localhost:5000/groups';
       fetch(url, {
@@ -212,7 +210,7 @@ class PUAttendance extends Component {
 
   handleGroupsCSV = () => {
     var url = 'http://localhost:5000/groups?secId='+
-      this.state.secId+'&format=csv&date='+this.state.date.mdy();
+      this.state.secId+'&format=csv&date='+dateToMdy(this.state.date);
     window.location.href = url;
   }
 

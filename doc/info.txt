@@ -5,3 +5,28 @@ with
 npm install -g npm@latest to update npm because it is sometimes buggy.
 rm -rf node_modules to remove the existing modules.
 npm install to re-install the project dependencies.
+
+
+----
+Sometimes above doesn't work and it may be an issue with the file watchers limit being exceeded.
+VS Code saves and react are interrelated.
+
+To see limit:
+$ cat /proc/sys/fs/inotify/max_user_watches
+
+You can set a new limit temporary with:
+
+$ sudo sysctl fs.inotify.max_user_watches=524288
+$ sudo sysctl -p
+If you like to make your limit permanent, use:
+
+$ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+$ sudo sysctl -p
+
+11/4/19 - I made mine permanent 
+11/4/19 - upgraded node to version 12.13
+
+-----
+
+Stopped using VS Code because is a memory hog with running react.  Switched to emacs with
+rjsx mode 
