@@ -17,12 +17,8 @@ class PUAdmin extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            tabKey: 'roster',
             sections: [],
-            firstClass: new Date(),
-            date: new Date(),
-            file: null
-            
+            boo: true
         }
     }
 
@@ -31,15 +27,9 @@ class PUAdmin extends Component {
         const formData = new FormData();
         formData.append('files',this.state.file);
         formData.append('startDate', dateToMdy(this.state.date));
-        fetch(url, { // Your POST endpoint
+        fetch(url, { 
             method: 'POST',
             mode: 'cors',
-            // headers: {
-            //     'Access-Control-Allow-Origin': '*',
-            // // Content-Type may need to be completely **omitted**
-            // // or you may need something
-            // // "Content-Type": "You will perhaps need to define a content-type here"
-            // },
             body: formData // This is your file object
         }).then(
             response => response.json() // if the response is a JSON object
@@ -53,11 +43,9 @@ class PUAdmin extends Component {
 
 
     componentDidMount() {
-        console.log('mounted');
         ModelFetcher.getSections()
         .then(result => {
             const sec1 = result[0];
-            // console.log("ModelFetcher gave",result);
             this.setState({sections: result, secId: sec1.id, term: sec1.term, selectedSecIndex: 0})
         });
     }
@@ -68,21 +56,31 @@ class PUAdmin extends Component {
         this.saveSectionRoster()
     }
 
-    handleSectionChanged = (index) => {
-        const sec = this.state.sections[index.index];
-        console.log("Sec selected",sec);
-        this.setState({secId: sec.id, selectedSecIndex: index.index});
-    }
+    handleChangeYear = () => {}
 
-    handleChangeDate = () => {}
-
-    handleFile = (event) => {
-        this.setState({file: event.target.files[0]});
-    }
 
     handleTermSelected = (term) => {
-        this.setState({term: term})
+        this.setState({term: term});
     }
+
+
+    handleChangeSectionField = (index, {secIndex, number, title, start_date, file}) => {
+        let secscpy = this.state.sections.slice();
+        let chgsec = {...secscpy[secIndex], number: number, title: title,
+                      start_date: start_date, file: file};
+        console.log("Change section",index," state to",chgsec);
+        secscpy[index] = chgsec;
+        const newst = {...this.state, sections: secscpy};
+        this.setState(newst);
+    }
+
+    handleAddSection = () => {
+        let secscpy = this.state.sections.slice();
+        let newSec = {start_date: new Date()};
+        secscpy.push(newSec);
+        this.setState({ sections: secscpy});
+    }
+
 
     render () {
         const secTitle =  this.state.secId ? 
@@ -94,19 +92,11 @@ class PUAdmin extends Component {
         defaultActiveKey="roster"
         onSelect={this.handleTabSelect}>
         <Tab eventKey="roster" title="Roster Setup">
-            <Form>
-                <Row>
-		{/*
-                    <Col>
-                        <DropdownButton id="dropdown-basic-button" title={secTitle}>
-                        {this.state.sections.map((s, index) =>
-                            <Dropdown.Item key={index} onSelect={() => this.handleSectionChanged({ index })}> {s.title}</Dropdown.Item>)}
-                        </DropdownButton>
-                    </Col>
-		 */}
-                    <Col>
+          <Form>
+              <Row>
+                <Col>
                         <DatePicker dateFormat="yyyy" selected={this.state.date}
-                            onChange={this.handleChangeDate} />
+                            onChange={this.handleChangeYear} />
                     </Col>
                     <Col>
                         <DropdownButton id="dropdown-basic-button" title={term}>
@@ -116,18 +106,11 @@ class PUAdmin extends Component {
                     </Col>
 
                 </Row>
-		
-		<SectionTable sections={this.state.sections}/>
-		{/*
-                <Form.Group as={Col} controlId='firstClass'>
-                    <Form.Label>First Class</Form.Label>
-                    <DatePicker selected={this.state.date}
-                        onChange={this.handleChangeDate} />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Roster Spreadsheet</Form.Label>
-                    <Form.Control name="xlsxFile" type="file" onChange={this.handleFile}/>
-                    </Form.Group> */}
+
+             <button onClick={this.handleAddSection}>+</button>
+	      <SectionTable sections={this.state.sections}
+                            onChangeSectionField={this.handleChangeSectionField}
+                            />
                 <Row>
                     <Col><Button onClick={this.handleRosterUpdate}>Update Roster</Button></Col>
                     

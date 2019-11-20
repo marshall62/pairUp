@@ -12,19 +12,6 @@ import DatePicker from "react-datepicker";
 import {dateToMdy} from './dates.js'; 
 import "react-datepicker/dist/react-datepicker.css";
 
-
-// Date.prototype.mdy = function() {
-//   var mm = this.getMonth() + 1; // getMonth() is zero-based
-//   var dd = this.getDate();
-
-//   var v = [
-//           (mm>9 ? '' : '0') + mm,
-//           (dd>9 ? '' : '0') + dd,
-//           this.getFullYear()
-//          ].join('/');
-//   return v;
-// };
-
 class PUAttendance extends Component {
 
   constructor(props) {
@@ -40,6 +27,8 @@ class PUAttendance extends Component {
     // this.handleChangeStudentStatus = this.handleChangeStudentStatus.bind(this);
     // this.handleSave = this.handleSave.bind(this);
   }
+
+
 
   // get a roster or the default roster if no sec_number given
   // will include attendance info in students for the date.
@@ -102,7 +91,6 @@ class PUAttendance extends Component {
         this.setState({
             sections: result
           })
-        console.log("Component mounting");
         return this.getSectionRoster()})
       .then(result => 
         this.getGroups(this.state.secId, new Date()));
@@ -150,8 +138,7 @@ class PUAttendance extends Component {
   }
 
   // An edit occurred on a student name in the attendance table.  
-  // Need to update the state's student list with a new student object.  Does
-  // this without mutating.
+  // Need to update the state's student list with a new student object. 
   handleChangeStudentName = (index, name) => {
     console.log("change student name",index, name);
     let names = name.split(' ');
