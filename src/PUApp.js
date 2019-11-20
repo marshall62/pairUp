@@ -5,29 +5,26 @@ import PairUpBanner from './PairUpBanner';
 import PUAdmin from './PUAdmin';
 import PUAttendance from './PUAttendance';
 
-
 class PUApp extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             tabkey: 'attendance',
-            admin: false
+            admin: false,
         };
     }
 
-    
+
     handleToolSelect = (e) => {
-        console.log("selected", e);
         this.setState({admin: (e === 'admin')})
     }
 
     render() {
-        console.log("PUApp render");
         return (
             <div className="container">
               <PairUpBanner onToolSelect={this.handleToolSelect}></PairUpBanner>
-              {(this.state.admin) ? <PUAdmin /> : <PUAttendance />}       
+              {(this.state.admin) ? <PUAdmin/> : <PUAttendance />}       
             </div>
         );
     }

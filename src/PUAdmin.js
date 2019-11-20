@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DatePicker from "react-datepicker";
@@ -16,15 +14,13 @@ class PUAdmin extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {
-            sections: [],
-            boo: true
-        }
+        this.state = {sections: []};
     }
 
     saveSectionRoster = () => {
         const url = 'http://localhost:5000/sections/' + this.state.secId;
         const formData = new FormData();
+        console.log("Saving Sections");
         formData.append('files',this.state.file);
         formData.append('startDate', dateToMdy(this.state.date));
         fetch(url, { 
@@ -83,16 +79,10 @@ class PUAdmin extends Component {
 
 
     render () {
-        const secTitle =  this.state.secId ? 
-            this.state.sections[this.state.selectedSecIndex].title : 
-            "select";
+
         const term = this.state.term ? this.state.term : "spring";
 
-        return (<div><p>admin</p><Tabs activeKey={this.state.tabKey} 
-        defaultActiveKey="roster"
-        onSelect={this.handleTabSelect}>
-        <Tab eventKey="roster" title="Roster Setup">
-          <Form>
+        return (<div><p>admin</p>
               <Row>
                 <Col>
                         <DatePicker dateFormat="yyyy" selected={this.state.date}
@@ -116,14 +106,7 @@ class PUAdmin extends Component {
                     
                     <Col><Button>Get CSV Attendance</Button></Col>
                 </Row>
-               
-            </Form>
-          
-        </Tab>
-        <Tab eventKey="sections" title="Sections Setup">
-        </Tab>
-                  
-      </Tabs>
+
       </div>)
     }
 }
