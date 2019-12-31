@@ -30,29 +30,7 @@ class PUAttendance extends Component {
 
 
 
-  // get a roster or the default roster if no sec_number given
-  // will include attendance info in students for the date.
-  // set the state to hold students and info about the section.
-  // return promise of fetch.
-  getSectionRoster (secId, dt) {
-    let url = 'http://localhost:5000/sections' +
-     (secId ? "?id="+secId: "") +
-     (dt ? "&date="+dateToMdy(dt) : "");
-    return fetch(url)
-      .then(result => result.json())
-      .then(result => {
-        const sec = result[0];
-        console.log("New roster",sec.roster.students)
-        this.setState({
-          students: sec.roster.students,
-          secId: sec.id,
-          title: sec.title
-        });
-        console.log('state',this.state);
-        return sec.id;
-      });
-        
-  }
+
 
   // get all the sections and set them in the state.
   // return the promise of fetch
@@ -85,13 +63,52 @@ class PUAttendance extends Component {
 
 
   // Code is invoked after the component is mounted/inserted into the DOM tree.
-  componentDidMount() {
-    ModelFetcher.getSections()
+  // componentDidMount() {
+  //   ModelFetcher.getSections(this.props.year, this.props.term)
+  //     .then(result => {
+  //       this.setState({
+  //           sections: result
+  //         })
+  //       return this.getSectionRoster()})
+  //     .then(result => 
+  //       this.getGroups(this.state.secId, new Date()));
+  // }
+
+    // get a roster or the default roster if no sec_number given
+  // will include attendance info in students for the date.
+  // set the state to hold students and info about the section.
+  // return promise of fetch.
+  getSectionRoster (secId, dt) {
+    let url = 'http://localhost:5000/sections' +
+     (secId ? "?id="+secId: "") +
+     (dt ? "&date="+dateToMdy(dt) : "");
+    return fetch(url)
+      .then(result => result.json())
       .then(result => {
+        const sec = result[0];
+        console.log("New roster",sec.roster.students)
         this.setState({
-            sections: result
-          })
-        return this.getSectionRoster()})
+          students: sec.roster.students,
+          secId: sec.id,
+          title: sec.title
+        });
+        console.log('state',this.state);
+        return sec.id;
+      });
+        
+  }
+
+  componentDidMount() {
+    ModelFetcher.getSections(this.props.year, this.props.term)
+      .then(result => {
+        const sec = result[0];
+        this.setState({
+            sections: result,
+            students: sec.roster.students,
+            secId: sec.id,
+            title: sec.title
+          });
+        return result})
       .then(result => 
         this.getGroups(this.state.secId, new Date()));
   }

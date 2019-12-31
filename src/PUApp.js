@@ -21,10 +21,12 @@ class PUApp extends Component {
     }
 
     render() {
+        const yr = '2020';
+        const term = 'spring';
         return (
             <div className="container">
               <PairUpBanner onToolSelect={this.handleToolSelect}></PairUpBanner>
-              {(this.state.admin) ? <PUAdmin/> : <PUAttendance />}       
+              {(this.state.admin) ? <PUAdmin/> : <PUAttendance year={yr} term={term}/>}       
             </div>
         );
     }

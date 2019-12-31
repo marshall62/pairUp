@@ -9,3 +9,7 @@ export function dateToMdy (date) {
          ].join('/');
   return v;  
 }
+
+export function dateToYYYY (date) {
+  return date.getFullYear(); 
+}
