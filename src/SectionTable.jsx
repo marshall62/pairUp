@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
 import DatePicker from "react-datepicker";
 import Form from "react-bootstrap/Form";
 
@@ -33,6 +34,7 @@ class SectionRow extends Component {
         <DatePicker selected={stdt}
           onChange={(dt) => chgFn(i, { ...sec, start_date: new Date(dt) })} />
       </td>
+      <td><Button onClick={() => this.props.onCSVDownload(sec.id)} >Download CSV</Button></td>
     </tr>
 
   }
@@ -46,10 +48,7 @@ class SectionTable extends Component {
         secId={sec.id}
         title={sec.short_title} number={sec.number}
         onChangeSectionField={this.props.onChangeSectionField}
-        onChangeLabTitle={this.props.onChangeTitle}
-        onChangeLabNumber={this.props.onChangeLabNumber}
-
-
+        onCSVDownload={this.props.onCSVDownload}
         startDate={sec.start_date}
       />
     });
@@ -61,6 +60,7 @@ class SectionTable extends Component {
             <th>meeting time</th>
             <th>roster file</th>
             <th>start date</th>
+            <th>Attendance history</th>
           </tr>
         </thead>
         <tbody>

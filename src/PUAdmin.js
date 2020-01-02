@@ -4,11 +4,8 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import DatePicker from "react-datepicker";
-import Form from "react-bootstrap/Form";
 import ModelFetcher from './ModelFetcher';
 import SectionTable from './SectionTable.jsx';
-import {dateToMdy, dateToYYYY} from './dates.js';
 
 class YearSelector extends Component {
     constructor (props) {
@@ -50,49 +47,27 @@ class PUAdmin extends Component {
     }
 
 
-
-    saveSectionRoster = () => {
-        const url = 'http://localhost:5000/sections/' + this.state.secId;
-        const formData = new FormData();
-        console.log("Saving Sections");
-        formData.append('files',this.state.file);
-        formData.append('startDate', dateToMdy(this.state.date));
-        fetch(url, { 
-            method: 'POST',
-            mode: 'cors',
-            body: formData // This is your file object
-        }).then(
-            response => response.json() // if the response is a JSON object
-        ).then(
-            success => console.log(success) // Handle the success response object
-        ).catch(
-            error => console.log(error) // Handle the error response object
-        );
-
-    }
-
-    addFileListToFD = (formData) => {
-        let files=[];
+    addFilesAndSectionsToFormData = (formData) => {
+        let secs = [];
         for (let i=0; i<this.state.sections.length; i++) {
-            const f = this.state.sections[i].file;
+            let sec = {...this.state.sections[i]}; // clone because we mutate with fileIncluded flag
+            sec.roster = null;  // large, don't want to send back.
+            secs.push(sec);
+            const f = sec.file;
             if (f) {
-                formData.append('files[]',f,f.name);
-                this.state.sections[i].fileIncluded = true;
-            }
-            
+                formData.append('files[]', f, f.name);
+                sec.fileIncluded = true;
+            }          
         }
+        formData.append('sections', JSON.stringify(secs));
     }
 
-    addSectionsToFD = (formData) => {
-        formData.append('sections', JSON.stringify(this.state.sections));
-    }
 
     saveSections = () => {
-        const url = 'http://localhost:5000/sections2';
+        const url = 'http://localhost:5000/sections';
         const formData = new FormData();
         console.log("Saving Sections");
-        this.addFileListToFD(formData);
-        this.addSectionsToFD(formData);
+        this.addFilesAndSectionsToFormData(formData);
         formData.append('term', this.state.term);
         formData.append('year', this.state.year);
         console.log("sending sections as", formData.get('sections'));
@@ -111,9 +86,7 @@ class PUAdmin extends Component {
 
     }    
 
-    handleRosterUpdate = () => {
-        console.log('update the roster for section', this.state.secId)
-        // PUT the changes to the roster.
+    handleSave = () => {
         this.saveSections()
     }
 
@@ -144,9 +117,16 @@ class PUAdmin extends Component {
 
     handleAddSection = () => {
         let secscpy = this.state.sections.slice();
-        let newSec = {start_date: new Date()};
+        let newSec = {number:'', short_title:'', start_date: new Date()};
         secscpy.push(newSec);
         this.setState({ sections: secscpy});
+    }
+
+    handleCSVDownload = (secId) => {
+        // Call API to get CSV file for this sec ID.
+        console.log("Get CSV for section", secId);
+        var url = 'http://localhost:5000/attendance-csv?secId=' + secId;
+        window.location.href = url;
     }
 
 
@@ -171,13 +151,12 @@ class PUAdmin extends Component {
             </Row>
 
             <button onClick={this.handleAddSection}>+</button>
-	        <SectionTable sections={this.state.sections}
+            <SectionTable sections={this.state.sections}
+                            onCSVDownload={this.handleCSVDownload}
                             onChangeSectionField={this.handleChangeSectionField}
                             />
             <Row>
-                <Col><Button onClick={this.handleRosterUpdate}>Update Roster</Button></Col>
-                
-                <Col><Button>Get CSV Attendance</Button></Col>
+                <Col><Button onClick={this.handleSave}>Save Changes</Button></Col>
             </Row>
 
       </div>)

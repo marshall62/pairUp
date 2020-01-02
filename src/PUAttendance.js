@@ -29,25 +29,6 @@ class PUAttendance extends Component {
   }
 
 
-
-
-
-  // get all the sections and set them in the state.
-  // return the promise of fetch
-  // TODO I'd like to delete this because its not being used. but the replacement
-  // within ModelFetcher has to clone the result before calling json and this one doesn't.
-  // Not sure why it generates a lock error and this one doesn't 
-  getSections () {
-    const url = 'http://localhost:5000/sections';
-    return fetch(url)
-        .then(result => result.json())
-        .then(result => {
-          this.setState({
-            sections: result
-          })
-        });
-  }
-
   // get the groups JSON for the secId and date and set the state
   // to hold them.  Return the promise of fetch
   getGroups (secId, dt) {
@@ -62,19 +43,7 @@ class PUAttendance extends Component {
   }
 
 
-  // Code is invoked after the component is mounted/inserted into the DOM tree.
-  // componentDidMount() {
-  //   ModelFetcher.getSections(this.props.year, this.props.term)
-  //     .then(result => {
-  //       this.setState({
-  //           sections: result
-  //         })
-  //       return this.getSectionRoster()})
-  //     .then(result => 
-  //       this.getGroups(this.state.secId, new Date()));
-  // }
-
-    // get a roster or the default roster if no sec_number given
+  // get a roster or the default roster if no sec_number given
   // will include attendance info in students for the date.
   // set the state to hold students and info about the section.
   // return promise of fetch.
@@ -114,7 +83,6 @@ class PUAttendance extends Component {
   }
 
   save_attendance(secId, students) {
-
     const url = 'http://localhost:5000/rosters';
     const selectedDate = this.state.date;
     // const old_date = '04/12/2005';
