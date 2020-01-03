@@ -1,9 +1,12 @@
+import URLs from './urls.js';
+
+
 export default class ModelFetcher {
 
     // get all the sections and set them in the state.
     // return the promise of fetch
     static getSections (year, term) {
-        let url = 'http://localhost:5000/sections';
+        let url = URLs.sections;
         let arg1 = false;
         console.log('getSections',year,term);
         if (year) {

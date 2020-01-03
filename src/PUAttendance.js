@@ -32,9 +32,7 @@ class PUAttendance extends Component {
   // get the groups JSON for the secId and date and set the state
   // to hold them.  Return the promise of fetch
   getGroups (secId, dt) {
-    let url = 'http://localhost:5000/groups' + 
-      (secId ? "?secId="+secId : "") +
-      (dt ? "&date="+dateToMdy(dt) : "")
+    let url = URLs.groups(secId, dt);
     return fetch(url)
       .then(result => result.json())
       .then(groups => {
@@ -48,9 +46,7 @@ class PUAttendance extends Component {
   // set the state to hold students and info about the section.
   // return promise of fetch.
   getSectionRoster (secId, dt) {
-    let url = 'http://localhost:5000/sections' +
-     (secId ? "?id="+secId: "") +
-     (dt ? "&date="+dateToMdy(dt) : "");
+    let url = URLs.sections(secId, dt);
     return fetch(url)
       .then(result => result.json())
       .then(result => {
@@ -83,9 +79,8 @@ class PUAttendance extends Component {
   }
 
   save_attendance(secId, students) {
-    const url = 'http://localhost:5000/rosters';
+    const url = URLs.rosters;
     const selectedDate = this.state.date;
-    // const old_date = '04/12/2005';
     fetch(url, {
       method: 'post',
       mode: 'cors',
@@ -125,7 +120,6 @@ class PUAttendance extends Component {
   // An edit occurred on a student name in the attendance table.  
   // Need to update the state's student list with a new student object. 
   handleChangeStudentName = (index, name) => {
-    console.log("change student name",index, name);
     let names = name.split(' ');
     let fname = names[0];
     let lname = names[1];
@@ -142,7 +136,6 @@ class PUAttendance extends Component {
   handleSave = (e) => {
     if (window.confirm("Are you sure you want to save?"))
     {
-      console.log(this.state.students);
       this.save_attendance(this.state.secId, this.state.students);
     }
   }
@@ -160,7 +153,7 @@ class PUAttendance extends Component {
     if (window.confirm("Are you sure you want to generate new groups")) {
       const selectedDate = dateToMdy(this.state.date);
       const secId = this.state.secId;
-      const url = 'http://localhost:5000/groups';
+      const url = URLs.groups;
       fetch(url, {
         method: 'post',
         mode: 'cors',
@@ -181,8 +174,7 @@ class PUAttendance extends Component {
   }
 
   handleGroupsCSV = () => {
-    var url = 'http://localhost:5000/groups?secId='+
-      this.state.secId+'&format=csv&date='+dateToMdy(this.state.date);
+    var url = URLs.groups(this.state.secId, this.state.date, 'csv')
     window.location.href = url;
   }
 

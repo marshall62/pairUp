@@ -6,6 +6,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ModelFetcher from './ModelFetcher';
 import SectionTable from './SectionTable.jsx';
+import URLs from './urls.js';
+
 
 class YearSelector extends Component {
     constructor (props) {
@@ -37,7 +39,6 @@ class PUAdmin extends Component {
         ModelFetcher.getSections()
         .then(result => {
             const sec1 = result[0];
-            console.log("sec1 is", result[0]);
             this.setState({
                 sections: result, 
                 term: sec1.term, 
@@ -64,14 +65,11 @@ class PUAdmin extends Component {
 
 
     saveSections = () => {
-        const url = 'http://localhost:5000/sections';
         const formData = new FormData();
-        console.log("Saving Sections");
         this.addFilesAndSectionsToFormData(formData);
         formData.append('term', this.state.term);
         formData.append('year', this.state.year);
-        console.log("sending sections as", formData.get('sections'));
-        fetch(url, { 
+        fetch(URLs.sections, { 
             method: 'POST',
             mode: 'cors',
             body: formData 
@@ -124,8 +122,7 @@ class PUAdmin extends Component {
 
     handleCSVDownload = (secId) => {
         // Call API to get CSV file for this sec ID.
-        console.log("Get CSV for section", secId);
-        var url = 'http://localhost:5000/attendance-csv?secId=' + secId;
+        var url =  URLs.attendance(secId);
         window.location.href = url;
     }
 

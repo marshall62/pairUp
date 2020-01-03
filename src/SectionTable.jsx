@@ -10,31 +10,31 @@ class SectionRow extends Component {
     const chgFn = this.props.onChangeSectionField; // a single handler function in PUAdmin
     const sec = this.props.section;
     const i = this.props.secIndex;
-    return <tr>
+    return <tr className="d-flex">
       {/* Lab Number */}
-      <td>
+      <td className="col-1">
         <Form.Control
           onChange={(e) => chgFn(i, { ...sec, number: e.target.value })}
           type="text" value={this.props.number} />
       </td>
       {/* Title */}
-      <td>
+      <td className="col-3">
         <Form.Control
           onChange={(e) => chgFn(i, { ...sec, short_title: e.target.value })}
           type="text" value={this.props.title} />
       </td>
       {/* CSV (roster) file */}
-      <td>
+      <td className="col-3">
         <Form.Control name="xlsxFile" type="file"
           onChange={(e) => chgFn(i, { ...sec, file: e.target.files[0] })}
         />
       </td>
       {/* Start Date  */}
-      <td>
+      <td className="col-3">
         <DatePicker selected={stdt}
           onChange={(dt) => chgFn(i, { ...sec, start_date: new Date(dt) })} />
       </td>
-      <td><Button onClick={() => this.props.onCSVDownload(sec.id)} >Download CSV</Button></td>
+      <td className="col-2"><Button onClick={() => this.props.onCSVDownload(sec.id)} >Download CSV</Button></td>
     </tr>
 
   }
@@ -53,20 +53,22 @@ class SectionTable extends Component {
       />
     });
     return (
+      <div className="container-fluid">
       <table className="table table-striped table-bordered">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>meeting time</th>
-            <th>roster file</th>
-            <th>start date</th>
-            <th>Attendance history</th>
+          <tr className="d-flex">
+            <th className="col-1">#</th>
+            <th className="col-3">meeting time</th>
+            <th className="col-3">roster file</th>
+            <th className="col-3">start date</th>
+            <th className="col-2">Attendance history</th>
           </tr>
         </thead>
         <tbody>
           {rows}
         </tbody>
       </table>
+      </div>
     )
   }
 }

@@ -76,7 +76,7 @@ class AttendanceTable extends Component {
         onChangeStudentName={this.props.onChangeStudentName} />
     });
     return (
-      <table className="table table-striped table-bordered">
+      <table className="table table-hover table-bordered">
         <thead>
           <tr>
             <th></th>
