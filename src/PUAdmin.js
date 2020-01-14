@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ModelFetcher from './ModelFetcher';
 import SectionTable from './SectionTable.jsx';
-import URLs from './urls.js';
+import {URLs} from './urls';
 
 
 class YearSelector extends Component {
@@ -39,11 +39,13 @@ class PUAdmin extends Component {
         ModelFetcher.getSections()
         .then(result => {
             const sec1 = result[0];
-            this.setState({
-                sections: result, 
-                term: sec1.term, 
+            if (sec1) {
+              this.setState({
+                sections: result,
+                term: sec1.term,
                 year: sec1.year
-                })
+              });
+            }
         });
     }
 
@@ -67,8 +69,10 @@ class PUAdmin extends Component {
     saveSections = () => {
         const formData = new FormData();
         this.addFilesAndSectionsToFormData(formData);
-        formData.append('term', this.state.term);
-        formData.append('year', this.state.year);
+        if (this.state.term)
+            formData.append('term', this.state.term);
+        if (this.state.year)
+            formData.append('year', this.state.year);
         fetch(URLs.sections, { 
             method: 'POST',
             mode: 'cors',
@@ -133,7 +137,7 @@ class PUAdmin extends Component {
         const year = this.state.year || '2020';
         console.log('year is ', year);
 
-        return (<div><p>admin</p>
+        return (<div>
             <Row>
                 <Col>
                     <YearSelector year={year} onChange={this.handleChangeYear}/>

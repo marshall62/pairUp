@@ -11,6 +11,7 @@ import Tab from 'react-bootstrap/Tab';
 import DatePicker from "react-datepicker";
 import {dateToMdy} from './dates.js'; 
 import "react-datepicker/dist/react-datepicker.css";
+import {URLs} from './urls';
 
 class PUAttendance extends Component {
 
@@ -32,7 +33,7 @@ class PUAttendance extends Component {
   // get the groups JSON for the secId and date and set the state
   // to hold them.  Return the promise of fetch
   getGroups (secId, dt) {
-    let url = URLs.groups(secId, dt);
+    let url = URLs.groups2(secId, dt);
     return fetch(url)
       .then(result => result.json())
       .then(groups => {
@@ -46,7 +47,7 @@ class PUAttendance extends Component {
   // set the state to hold students and info about the section.
   // return promise of fetch.
   getSectionRoster (secId, dt) {
-    let url = URLs.sections(secId, dt);
+    let url = URLs.sections2(secId, dt);
     return fetch(url)
       .then(result => result.json())
       .then(result => {
@@ -67,15 +68,22 @@ class PUAttendance extends Component {
     ModelFetcher.getSections(this.props.year, this.props.term)
       .then(result => {
         const sec = result[0];
+        if (sec) {
+
+        }
+        else return null;
+        const students = sec.roster ? sec.roster.students : [];
         this.setState({
             sections: result,
-            students: sec.roster.students,
+            students: students,
             secId: sec.id,
             title: sec.title
           });
-        return result})
-      .then(result => 
-        this.getGroups(this.state.secId, new Date()));
+        return result}
+        )
+      .then(result => {
+          if (result)
+            this.getGroups(this.state.secId, new Date()) });
   }
 
   save_attendance(secId, students) {

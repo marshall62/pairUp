@@ -30,3 +30,17 @@ $ sudo sysctl -p
 
 Stopped using VS Code because is a memory hog with running react.  Switched to emacs with
 rjsx mode 
+
+
+Fresh setup on a machine:
+1.  clone pairup to dir (e.g. pairup/ui)
+2.  clone partner to a dir (e.g. pairup/partner)
+3.  Create venv in partner and install dependencies in requirements.txt
+4.  Create Flask runtime configuration pointing to script pairup/partner/partner.py
+5.  Install npm dependencies for pairup (run npm audit fix to get rid of warnings)
+6.  Edit partner/config.cfg and set paths correctly
+7.  source venv/bin/activate
+8.  cd partner
+9.  flask db init
+10. flask db migrate
+11. npm start

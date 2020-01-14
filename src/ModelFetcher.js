@@ -1,4 +1,4 @@
-import URLs from './urls.js';
+import {URLs} from './urls';
 
 
 export default class ModelFetcher {
