@@ -34,7 +34,7 @@ class PUAttendance extends Component {
   // to hold them.  Return the promise of fetch
   getGroups (secId, dt) {
     let url = URLs.groups2(secId, dt);
-    return fetch(url)
+    return URLs.get_with_credentials(url)
       .then(result => result.json())
       .then(groups => {
         this.setState({groups: groups})
@@ -48,7 +48,7 @@ class PUAttendance extends Component {
   // return promise of fetch.
   getSectionRoster (secId, dt) {
     let url = URLs.sections2(secId, dt);
-    return fetch(url)
+    return URLs.get_with_credentials(url)
       .then(result => result.json())
       .then(result => {
         const sec = result[0];
@@ -83,24 +83,26 @@ class PUAttendance extends Component {
         )
       .then(result => {
           if (result)
-            this.getGroups(this.state.secId, new Date()) });
+            this.getGroups(this.state.secId, new Date()) })
+      .catch(err => {
+        this.props.onNotLoggedIn();
+      })
   }
 
-  save_attendance(secId, students) {
+  save_attendance = (secId, students) => {
     const url = URLs.rosters;
     const selectedDate = this.state.date;
     fetch(url, {
       method: 'post',
       mode: 'cors',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ secId: secId, date: dateToMdy(selectedDate), students: students })
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      // console.log('received:', data);
-    });
+    })
+    .then(response => response.json())
+    .then(data => this.setState({dirty: false}));
   }
 
 
@@ -122,7 +124,7 @@ class PUAttendance extends Component {
     let stud = students[index];
     stud.status = status;
     // alert("Student " + index + " status is now " + status);
-    this.setState({ students: students });
+    this.setState({ students: students, dirty: true});
   }
 
   // An edit occurred on a student name in the attendance table.  
@@ -165,6 +167,7 @@ class PUAttendance extends Component {
       fetch(url, {
         method: 'post',
         mode: 'cors',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -182,7 +185,7 @@ class PUAttendance extends Component {
   }
 
   handleGroupsCSV = () => {
-    var url = URLs.groups(this.state.secId, this.state.date, 'csv')
+    var url = URLs.groups2(this.state.secId, this.state.date, 'csv')
     window.location.href = url;
   }
 
@@ -222,7 +225,9 @@ class PUAttendance extends Component {
         </Tabs>
         <div className="form-row">
           <div className="col-2">
+            {this.state.tabKey !== 'groups' && this.state.dirty ?
             <button className="btn btn-primary" onClick={this.handleSave}>Save</button>
+                : <span/>}
           </div>
           <div className="col-4">
                   <DropdownButton id="dropdown-basic-button" title="Group Generation">

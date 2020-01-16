@@ -23,6 +23,8 @@ function PairUpBanner (props) {
             <Nav className="mr-auto">
               <Nav.Link onClick={() => props.onToolSelect('admin')} href="#admin">Admin</Nav.Link>
               <Nav.Link onClick={() => props.onToolSelect('attendance')} href="#attendance">Attendance</Nav.Link>
+              <Nav.Link onClick={() => props.onToolSelect('login')} href="#login">Login</Nav.Link>
+              <Nav.Link onClick={() => props.onToolSelect('logout')} href="#logout">Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

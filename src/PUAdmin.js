@@ -46,7 +46,11 @@ class PUAdmin extends Component {
                 year: sec1.year
               });
             }
-        });
+        })
+        .catch(err => {
+            alert("Caught error" + err);
+            this.props.onNotLoggedIn();
+        })
     }
 
 
@@ -73,11 +77,8 @@ class PUAdmin extends Component {
             formData.append('term', this.state.term);
         if (this.state.year)
             formData.append('year', this.state.year);
-        fetch(URLs.sections, { 
-            method: 'POST',
-            mode: 'cors',
-            body: formData 
-        }).then(
+        URLs.post_with_credentials(URLs.sections, formData)
+        .then(
             // gets back json of section objects written (may have new ids in)
             response => response.json() // if the response is a JSON object
         ).then(

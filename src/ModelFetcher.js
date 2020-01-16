@@ -17,10 +17,10 @@ export default class ModelFetcher {
             url += arg1 ? '&' : '?'
             url += 'term=' + term;
         }
+        return URLs.get_with_credentials(url).then(result => result.clone().json());
+        // return fetch(url)
+            // .then(result => result.clone().json());
 
-        return fetch(url)
-            .then(result => result.clone().json());
-            // .then(result => result.json());
 
 
     }
