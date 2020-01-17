@@ -32,6 +32,7 @@ export class URLs {
 
   // make an AJAX call that is capable of receiving cross-domain cookies and sending them
   static post_with_credentials = (url, formData) => {
+        console.log("in post_w_cred")
     return fetch(url, {
       method: 'post',
       mode: 'cors',
@@ -39,6 +40,7 @@ export class URLs {
       body: formData
     })
     .then(response => {
+        console.log("got response", response);
         if (response.status === 401) {
           alert("You must login");
           throw new Error("Login failed");

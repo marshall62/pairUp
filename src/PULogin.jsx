@@ -21,7 +21,6 @@ class PULogin extends Component {
     URLs.post_with_credentials(URLs.login, fd)
     .then(response => response.json())
     .then(json => {
-      alert("Login returned" + json);
       // message will be present if login is failure
       if (json.message)
         this.setState({message: json.message});
@@ -36,7 +35,7 @@ class PULogin extends Component {
   }
 
   render () {
-    return <form>
+    return <div>
       <label htmlFor="email">Email</label>
       <Form.Control id="email"
           onChange={(e) => this.setState({email: e.target.value })}
@@ -46,9 +45,9 @@ class PULogin extends Component {
           onChange={(e) => this.setState({password: e.target.value })}
           type="password"/>
       <br/>
-      <Button onClick={this.handleClick} type="submit">Submit</Button>
+      <Button onClick={this.handleClick} type="submit">Submit!</Button>
       <p>{this.state.message}</p>
-    </form>
+    </div>
   }
 
 }

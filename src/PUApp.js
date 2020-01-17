@@ -27,7 +27,6 @@ class PUApp extends Component {
     }
 
     handleLogin = (userid) => {
-        alert("Login succeeded")
         // when login succeeds, set the user and go to attendance tab
         this.setState({user: userid, ontab: 'attendance'});
 
@@ -78,7 +77,6 @@ class PUApp extends Component {
 
               <PairUpBanner onToolSelect={this.handleToolSelect}></PairUpBanner>
               { renderTab() }
-              {/*{(this.state.admin) ? <PUAdmin/> : <PUAttendance year={yr} term={term}/>}       */}
             </div>
         );
     }
