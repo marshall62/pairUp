@@ -7,23 +7,25 @@ import PULogin from './PULogin.jsx';
 import PUAttendance from './PUAttendance';
 import {URLs} from './urls';
 
-/*
-There is something bad happening with the cookies.  If I hit the main URL localhost:3000
-after having been logged in (so the cookies persist) I'm not taken to the attendance tab.  I
-instead go to the login tab.  I then need to click the login button 2X because the first click
-does nothing and the second one is the one that sends stuff to the server.
- */
-
 class PUApp extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            tabkey: 'attendance',
             ontab: 'login',
             admin: false,
             user: null
         };
+    }
+
+    componentDidMount() {
+        URLs.get_with_credentials(URLs.user)
+        .then(result => result.json())
+        .then(json => {
+            if (json.user)
+                this.setState({user: json.user});
+        })
+
     }
 
     handleLogin = (userid) => {
@@ -75,7 +77,7 @@ class PUApp extends Component {
         return (
             <div className="container">
 
-              <PairUpBanner onToolSelect={this.handleToolSelect}></PairUpBanner>
+              <PairUpBanner activeLink={this.state.ontab} onToolSelect={this.handleToolSelect}></PairUpBanner>
               { renderTab() }
             </div>
         );

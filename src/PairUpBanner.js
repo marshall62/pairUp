@@ -21,10 +21,10 @@ function PairUpBanner (props) {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link onClick={() => props.onToolSelect('admin')} href="#admin">Admin</Nav.Link>
-              <Nav.Link onClick={() => props.onToolSelect('attendance')} href="#attendance">Attendance</Nav.Link>
-              <Nav.Link onClick={() => props.onToolSelect('login')} href="#login">Login</Nav.Link>
-              <Nav.Link onClick={() => props.onToolSelect('logout')} href="#logout">Logout</Nav.Link>
+              <Nav.Link active={props.activeLink==='admin'?true:false} onClick={() => props.onToolSelect('admin')} href="#admin">Admin</Nav.Link>
+              <Nav.Link active={props.activeLink==='attendance'?true:false} onClick={() => props.onToolSelect('attendance')} href="#attendance">Attendance</Nav.Link>
+              <Nav.Link active={props.activeLink==='login'?true:false} onClick={() => props.onToolSelect('login')} href="#login">Login</Nav.Link>
+              <Nav.Link active={props.activeLink==='logout'?true:false} onClick={() => props.onToolSelect('logout')} href="#logout">Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

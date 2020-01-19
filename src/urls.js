@@ -1,7 +1,7 @@
 import {dateToMdy} from './dates.js';
 export class URLs {
     static pre = "http://localhost:5000/rest/";
-
+    static user = URLs.pre + "user";
     static sections = URLs.pre + "sections";
     static rosters = URLs.pre + "rosters"; 
     static groups = URLs.pre + "groups";
