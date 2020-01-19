@@ -2,6 +2,7 @@ import {dateToMdy} from './dates.js';
 export class URLs {
     static pre = "http://localhost:5000/rest/";
     static user = URLs.pre + "user";
+    static term_year = URLs.pre + "term-year";
     static sections = URLs.pre + "sections";
     static rosters = URLs.pre + "rosters"; 
     static groups = URLs.pre + "groups";
@@ -69,6 +70,13 @@ export class URLs {
             return response;
         }
     })
+  }
+
+  static get = (url) => {
+    return fetch(url, {
+      method: 'get',
+      mode: 'cors'
+    });
   }
     
 }

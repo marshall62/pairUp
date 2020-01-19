@@ -13,18 +13,25 @@ class PUApp extends Component {
         super(props);
         this.state = {
             ontab: 'login',
+            year: 2020,
+            term: 'fall',
             admin: false,
             user: null
         };
     }
 
     componentDidMount() {
-        URLs.get_with_credentials(URLs.user)
+        URLs.get(URLs.term_year)
+        .then(response => response.json())
+        .then(json => this.setState({term: json.term, year: json.year}))
+        .then(x => URLs.get_with_credentials(URLs.user))
         .then(result => result.json())
         .then(json => {
-            if (json.user)
-                this.setState({user: json.user});
-        })
+            if (json.user) {
+              this.setState({user: json.user, ontab: 'attendance'});
+            }
+
+        });
 
     }
 
@@ -59,8 +66,8 @@ class PUApp extends Component {
     }
 
     render() {
-        const yr = '2020';
-        const term = 'spring';
+        const yr = this.state.year;
+        const term = this.state.term;
         let selectedTab = this.state.ontab;
         const renderTab = () => {
             if (selectedTab === "admin")   {
