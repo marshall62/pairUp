@@ -1,6 +1,7 @@
 import {dateToMdy} from './dates.js';
 export class URLs {
-    static pre = "http://localhost:5000/rest/";
+    static host = process.env.REACT_APP_BACKEND_URI;
+    static pre = URLs.host + "/rest/";
     static user = URLs.pre + "user";
     static term_year = URLs.pre + "term-year";
     static sections = URLs.pre + "sections";
