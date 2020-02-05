@@ -139,6 +139,7 @@ class PUAttendance extends Component {
       preferred_fname: fname, last_name: lname};
     students2[index] = chgstud;
     const newst = {...this.state};
+    newst.dirty = true;
     newst.students = students2;
     this.setState(newst)
   }
