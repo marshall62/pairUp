@@ -130,9 +130,17 @@ class PUAttendance extends Component {
   // An edit occurred on a student name in the attendance table.  
   // Need to update the state's student list with a new student object. 
   handleChangeStudentName = (index, name) => {
-    let names = name.split(' ');
-    let fname = names[0];
-    let lname = names[1];
+    let names, fname, lname;
+    if (name.indexOf(' ') != -1) {
+      names = name.split(' ');
+      fname = names[0];
+      lname = names[1];
+    }
+    else {
+       names = name;
+       fname = '';
+       lname = name;
+    }
     let students = this.state.students;
     let students2 = students.slice(); // shallow copy of students
     let chgstud = {...students2[index], edited: true, 
