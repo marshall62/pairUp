@@ -139,10 +139,11 @@ class PUAttendance extends Component {
       preferred_fname: fname, last_name: lname};
     students2[index] = chgstud;
     const newst = {...this.state};
-    newst.dirty = true;
+    newst.dirty = true; // turns on the save button
     newst.students = students2;
     this.setState(newst)
   }
+
 
   handleSave = (e) => {
     if (window.confirm("Are you sure you want to save?"))
