@@ -44,7 +44,7 @@ class StudentNameField extends Component {
 class StudentAttendanceRow extends Component {
 
   render() {
-    const name = this.props.first_name + ' ' + this.props.last_name
+    const name = this.props.full_name;
     const present = this.props.status === 'P'
     const absent = this.props.status === 'A'
     const attOther = this.props.status === 'AO'
@@ -72,6 +72,7 @@ class AttendanceTable extends Component {
     const rows = this.props.students.map((s, index) => {
       return <StudentAttendanceRow key={index} studIndex={index} 
         first_name={s.preferred_fname} last_name={s.last_name}
+        full_name ={s.full_name}
         status={s.status} pic_url={s.pic_url} onChangeStatus={this.props.onChangeStatus}
         onChangeStudentName={this.props.onChangeStudentName} />
     });

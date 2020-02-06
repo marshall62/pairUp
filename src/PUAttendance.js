@@ -68,10 +68,9 @@ class PUAttendance extends Component {
     ModelFetcher.getSections(this.props.year, this.props.term)
       .then(result => {
         const sec = result[0];
-        if (sec) {
+        if (!sec)
+          return null;
 
-        }
-        else return null;
         const students = sec.roster ? sec.roster.students : [];
         this.setState({
             sections: result,
@@ -130,21 +129,11 @@ class PUAttendance extends Component {
   // An edit occurred on a student name in the attendance table.  
   // Need to update the state's student list with a new student object. 
   handleChangeStudentName = (index, name) => {
-    let names, fname, lname;
-    if (name.indexOf(' ') != -1) {
-      names = name.split(' ');
-      fname = names[0];
-      lname = names[1];
-    }
-    else {
-       names = name;
-       fname = '';
-       lname = name;
-    }
+    let full_name = name;
     let students = this.state.students;
     let students2 = students.slice(); // shallow copy of students
     let chgstud = {...students2[index], edited: true, 
-      preferred_fname: fname, last_name: lname};
+      full_name: full_name};
     students2[index] = chgstud;
     const newst = {...this.state};
     newst.dirty = true; // turns on the save button
