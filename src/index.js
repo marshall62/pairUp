@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import PUApp from './PUApp';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-//ReactDOM.render(<App />, document.getElementById('root'));
+// ReactDOM.render(<App />, document.getElementById('root'));
 ReactDOM.render(<PUApp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
