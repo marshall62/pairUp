@@ -1,7 +1,8 @@
 import {dateToMdy} from './dates.js';
 export class URLs {
-    // static host = process.env.REACT_APP_BACKEND_URI;
-    static host = "/api";
+    static corsHost = process.env.REACT_APP_BACKEND_URI;
+    static proxyHost = "/api";
+    static host = process.env.REACT_APP_USE_CORS==="true" ? URLs.corsHost : URLs.proxyHost;
     static pre = URLs.host + "/rest/";
     static user = URLs.pre + "user";
     static term_year = URLs.pre + "term-year";
@@ -35,7 +36,9 @@ export class URLs {
 
   // make an AJAX call that is capable of receiving cross-domain cookies and sending them
   static post_with_credentials = (url, formData) => {
-    console.log("in post_w_cred")
+    console.log("host ", URLs.host, "cors host ", URLs.corsHost);
+    console.log("mode:",process.env.NODE_ENV)
+    console.log("use_cors:" , process.env.REACT_APP_USE_CORS);
     return fetch(url, {
       method: 'post',
       mode: 'cors',
