@@ -11,8 +11,8 @@ export class URLs {
     static groups = URLs.pre + "groups";
     static attendance(secId) { return URLs.pre + "attendance-csv?secId=" + secId };
 
-    static login = URLs.pre + "login-user";
-    static logout = URLs.pre + "logout-user";
+    static login = URLs.pre + "login-instructor";
+    static logout = URLs.pre + "logout-instructor";
 
 
     static groups2(secId, date, format) {
