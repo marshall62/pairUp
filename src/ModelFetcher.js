@@ -3,7 +3,7 @@ import {URLs} from './urls';
 
 export default class ModelFetcher {
 
-    // get all the sections and set them in the state.
+    // get all the sections .
     // return the promise of fetch
     static getSections (year, term) {
         let url = URLs.sections;
