@@ -1,4 +1,10 @@
-From time to time react or node seem to get hosed and the react app won't start because 
+How to run this:
+cd to root dir
+npm start
+This uses the start target within package.json
+----------------------------
+
+From time to time react or node seem to get hosed and the react app won't start because
 of some error.  I fix it typically by reinstalling npm and the dependencies
 with
 
