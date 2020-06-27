@@ -23,7 +23,8 @@ class PUAttendance extends Component {
       groups: [],
       sections: [],
       date: new Date(),
-      title: 'Sections'
+      title: 'Sections',
+      term: props.term
     };
     // this.handleChangeStudentStatus = this.handleChangeStudentStatus.bind(this);
     // this.handleSave = this.handleSave.bind(this);
@@ -42,21 +43,36 @@ class PUAttendance extends Component {
   }
 
 
-  // get a roster or the default roster if no sec_number given
+  // Get all the info about the section including the roster or the default roster if no sec_number given
   // will include attendance info in students for the date.
   // set the state to hold students and info about the section.
   // return promise of fetch.
-  getSectionRoster (secId, dt) {
-    let url = URLs.sections2(secId, dt);
+  getSectionInfo(secId, dt, term) {
+    let url = URLs.sections2(secId, dt, term);
     return URLs.get_with_credentials(url)
       .then(result => result.json())
       .then(result => {
+        if (result.length === 0) {
+          console.log("No sections returned");
+          this.setState({students: [], secId: 0, title: "No section found"})
+          return -1;
+        }
         const sec = result[0];
         console.log("New roster",sec.roster.students)
-        this.setState({
+        // if we want info about one section (using id), we will only get one back, so don't overwrite sections field
+        if (secId) {
+          this.setState({
+            students: sec.roster.students,
+            secId: sec.id,
+            title: sec.title,
+          });
+        }
+        // requests for all sections will overwrite the sections field.
+        else this.setState({
           students: sec.roster.students,
           secId: sec.id,
-          title: sec.title
+          title: sec.title,
+          sections: result
         });
         console.log('state',this.state);
         return sec.id;
@@ -111,10 +127,12 @@ class PUAttendance extends Component {
     this.setState({
       date: new Date(date)
     });
-    this.getSectionRoster(this.state.secId, date)
+    // this.getSectionInfo(this.state.secId, date, this.state.term)
+    this.getSectionInfo(0, date, this.state.term)
       .then(result => this.getGroups(this.state.secId, date))
     
-  };
+  }
+
 
   // When a component below changes the attendance status of a student this handler is called
   // with the index of the student and the status.
@@ -153,7 +171,7 @@ class PUAttendance extends Component {
     const ix = index.index;
     const sec = this.state.sections[ix];
     this.setState({secId: sec.id});
-    this.getSectionRoster(sec.id, this.state.date)
+    this.getSectionInfo(sec.id, this.state.date)
       .then(result => this.getGroups(sec.id, this.state.date))
     
   }
@@ -188,6 +206,11 @@ class PUAttendance extends Component {
     window.location.href = url;
   }
 
+  handleTermChanged = (t) => {
+    console.log("term changed to", t.trm);
+    this.setState({term: t.trm});
+  }
+
 
   render() {
     return (
@@ -207,6 +230,15 @@ class PUAttendance extends Component {
                 <div className="col-4">
                   <DatePicker selected={this.state.date}
                     onChange={this.handleChangeDate} />
+                </div>
+                <div className="col-4">
+                  <DropdownButton id="dropdown-term-button" title={this.state.term}>
+                    {['spring', 'fall', 'summer', 'winter'].map((trm, index) =>
+                        <Dropdown.Item key={index}
+                                       onSelect={() => this.handleTermChanged({trm})}>
+                          {trm}
+                          </Dropdown.Item>)}
+                  </DropdownButton>
                 </div>
               </div>
               <AttendanceTable 

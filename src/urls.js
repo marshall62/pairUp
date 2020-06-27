@@ -25,11 +25,16 @@ export class URLs {
             u += "&format=" + format;
         return u;
     }
-    static sections2(secId, date) {
+    static sections2(secId, date, term) {
         let u = URLs.sections;
         if (secId && date) {
             u += "?id=" + secId;
             u += "&date=" + dateToMdy(date);
+            u += "&term=" + term
+        }
+        else if (date) {
+          u += '?date=' + dateToMdy(date);
+          u += "&term=" + term
         }
         return u;
     }
