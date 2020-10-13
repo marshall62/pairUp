@@ -2,6 +2,19 @@ How to run this:
 cd to root dir
 npm start
 This uses the start target within package.json
+
+When running the localhost this start target should be:
+"start": "react-scripts start",
+But when on the heroku server it should be:
+"start": "node server.js",
+
+Since there aren't valid comment chars in JSON I have both start targets in package.json and set them accordingly.
+I'm also not allowed to make up my own targets like "local-start" so I'm not sure how to deal with these two different starts
+in two diff environments.  Not sure why running server.js locally fails but that seems to be what needs to work.
+
+So this is clearly a problem because when I deploy to heroku it leaves the project in a state where it will no longer run
+locally.
+
 ----------------------------
 
 From time to time react or node seem to get hosed and the react app won't start because
@@ -44,7 +57,7 @@ Fresh setup on a machine:
 3.  Create venv in partner and install dependencies in requirements.txt
 4.  Create Flask runtime configuration pointing to script pairup/partner/partner.py
 5.  Install npm dependencies for pairup (run npm audit fix to get rid of warnings)
-6.  Edit partner/config.cfg and set paths correctly
+    npm install
 7.  source venv/bin/activate
 8.  cd partner
 9.  flask db init
